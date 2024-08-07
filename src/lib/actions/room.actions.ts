@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 import { liveblocks } from "../liveblocks";
 import { revalidatePath } from "next/cache";
 import { getAccessType } from "../utils";
+import { log } from "console";
+import { redirect } from "next/navigation";
 export const createDocument = async ({
   userId,
   email,
@@ -118,5 +120,15 @@ export const removeCollaborator = async ({
     return updatedRoom;
   } catch (error) {
     console.log("Error happened while removing the collaborator");
+  }
+};
+
+export const deleteDocument = async (roomId: string) => {
+  try {
+    await liveblocks.deleteRoom(roomId);
+    revalidatePath("/");
+    redirect("/");
+  } catch (error) {
+    log("Error happened while deleting a room");
   }
 };
